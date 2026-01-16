@@ -1,0 +1,30 @@
+services:
+  product-db-dp:
+    build: kuma-dp-database
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./kuma-demo:/demo
+    environment:
+      POSTGRES_DB: product_db
+      POSTGRES_USER: product_user
+      POSTGRES_PASSWORD: product
+      KUMA_CP_ADDRESS: https://172.57.78.1:5678
+      KUMA_DATAPLANE_FILE: /demo/dataplane.yaml
+      KUMA_DATAPLANE_TOKEN_FILE: /demo/token-db
+      DATAPLANE_VAR_NAME: postgres-db
+      DATAPLANE_VAR_ADDRESS: 172.57.78.2
+      DATAPLANE_VAR_PORT: 5432
+      CONFIG_TRANSPARENT_PROXY_FILE: /demo/config-transparent-proxy.yaml
+      LOG_FOLDER: /demo
+    ports:
+      - "25432:5432"
+    networks:
+      kuma-demo-network:
+        ipv4_address: 172.57.78.2
+
+networks:
+  kuma-demo-network:
+    external: true
+

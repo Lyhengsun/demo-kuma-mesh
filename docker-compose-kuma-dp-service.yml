@@ -1,0 +1,31 @@
+services:
+  product-service-dp:
+    build: .
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./kuma-demo:/demo
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db.svc.mesh.local:5432/product_db?ssl=false
+      SPRING_DATASOURCE_USERNAME: product_user
+      SPRING_DATASOURCE_PASSWORD: product
+      SPRING_SERVER_PORT: 8080
+      KUMA_CP_ADDRESS: https://172.57.78.1:5678
+      KUMA_DATAPLANE_FILE: /demo/dataplane.yaml
+      KUMA_DATAPLANE_TOKEN_FILE: /demo/token-product-service
+      DATAPLANE_VAR_NAME: product-service
+      DATAPLANE_VAR_ADDRESS: 172.57.78.3
+      DATAPLANE_VAR_PORT: 8080
+      LOG_FOLDER: /demo
+    ports:
+      - "9090:8080"
+    networks:
+      kuma-demo-network:
+        ipv4_address: 172.57.78.3
+
+networks:
+  kuma-demo-network:
+    external: true
+

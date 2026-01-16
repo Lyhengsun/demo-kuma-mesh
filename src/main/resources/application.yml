@@ -1,0 +1,7 @@
+#spring.application.name=demo-product-kuma-mesh
+spring:
+  application:
+    name: demo-product-kuma-mesh
+
+  profiles:
+    active: dev

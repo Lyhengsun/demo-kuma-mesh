@@ -1,0 +1,25 @@
+type: MeshTrafficPermission
+name: allow-product-service-to-db
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: postgres-db
+  from:
+  - targetRef:
+      kind: MeshSubset
+      tags:
+        kuma.io/service: product-service
+    default:
+      action: Allow
+---
+type: MeshTrafficPermission
+name: deny-all-traffic
+mesh: default
+spec:
+  from:
+  - targetRef:
+      kind: Mesh
+    default:
+      action: Deny
