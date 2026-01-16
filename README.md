@@ -7,7 +7,7 @@ It will deploy a simple CRUD for products that communicate with a postgres datab
 ### Create a docker network
 ```shell
 docker network create \
-  --subnet 172.57.0.0/16 \
+  --subnet 172.57.78.0/24 \
   --ip-range 172.57.78.0/24 \
   --gateway 172.57.78.254 \
   kuma-demo-network
@@ -30,7 +30,7 @@ Check and confirm that kumactl is installed:
 kumactl version 2>/dev/null
 ```
 
-### 2. Start the kuma control plane:
+### 2. Setup the kuma control plane:
 ```shell
 docker compose -f docker-compose-kuma-cp.yml up -d
 ```
@@ -59,7 +59,13 @@ Run this command to check if the connection is working:
 ```shell
 kumactl get meshes
 ```
-You should see a list of meshes with one entry: ```default```. This confirms the configuration is successful.
+You should see a list of meshes with one entry called ```default```. This confirms the configuration is successful.
+
+Output:
+```shell
+NAME      mTLS   LOCALITY   ZONEEGRESS   AGE
+default   off    off        off          2m
+```
 
 Set the default mesh to use MeshServices in Exclusive mode and have mTLS enabled in Kuma Mesh:
 ```shell
@@ -103,5 +109,5 @@ Start the product service and wait for it to setup and register itself to the Ku
 ```shell
 docker compose -f docker-compose-kuma-dp-service.yml up -d
 ```
-```product-service``` should appear on the GUI for the Kuma Control Plane and the API should be running on http://localhost:9090/swagger-ui/index.html
+After it finished starting up, ```product-service``` should appear on the GUI for the Kuma Control Plane and the API should be running on http://localhost:9090/swagger-ui/index.html
 

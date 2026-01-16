@@ -25,7 +25,7 @@ public class ProductSpecification {
 
     public static Specification<Product> greaterThanOrEqualUnitPrice(BigDecimal unitPrice) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThanOrEqualTo(root.get("unitPrice"), unitPrice);
+                criteriaBuilder.greaterThanOrEqualTo(root.get("unitPrice"), unitPrice);
     }
 
     public static Specification<Product> lessThanOrEqualAmount(Long amount) {

@@ -162,12 +162,21 @@ public class ProductService {
 
     public void deleteProductCategoryById(UUID id) {
         ProductCategory foundProductCategory = getProductCategoryById(id);
+        int productCount = productRepository.countByCategoryId(foundProductCategory.getId());
+        if (productCount > 0) {
+            throw new BadRequestException("This category is being used by " + productCount + " product" +  (productCount > 1 ? "s" : "") + " and can't be deleted");
+        }
+
         productCategoryRepository.delete(foundProductCategory);
     }
 
     private void validateProductRequest(ProductRequest request) {
         if (!(request.amount() > 0) && request.availability() == ProductAvailability.IN_STOCK ) {
             throw new BadRequestException("Amount of 0 can't be in stock");
+        }
+
+        if (!(request.amount() <= 0) && request.availability() == ProductAvailability.OUT_OF_STOCK) {
+            throw new BadRequestException("Amount higher than 0 can't be out of stock");
         }
     }
 }
