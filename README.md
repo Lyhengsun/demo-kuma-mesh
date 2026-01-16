@@ -3,7 +3,7 @@ This project focuses on learning about Kuma Mesh.
 
 It will deploy a simple CRUD for products that communicate with a postgres database using Kuma Mesh.
 
-## Prerequisite
+## Pre-requisite
 ### Create a docker network
 ```shell
 docker network create \
