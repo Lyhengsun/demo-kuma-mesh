@@ -14,22 +14,27 @@ docker network create \
 ```
 
 ## Quickstart
-Install the kumactl binary:
+### 1. Install the kumactl binary:
 ```shell
 curl -L https://kuma.io/installer.sh | VERSION="2.13.0" sh -
 ```
-Add the ```bin``` folder to the PATH if you want to use the command across the system
+Add the ```bin``` folder to the PATH if you want to use the ```kumactl``` command across the system.
+
+For Linux, you can just move the binary to ```/usr/local/bin```
+```shell
+mv kuma-2.13.0/bin/* /usr/local/bin/  
+```
 
 Check and confirm that kumactl is installed:
 ```shell
 kumactl version 2>/dev/null
 ```
 
-Start the kuma control plane:
+### 2. Start the kuma control plane:
 ```shell
 docker compose -f docker-compose-kuma-cp.yml up -d
 ```
-You can check the gui of the control plane at http
+You can check the gui of the control plane at http://localhost:25681/gui/
 
 Get admin token from control plane container:
 ```shell
@@ -56,7 +61,7 @@ kumactl get meshes
 ```
 You should see a list of meshes with one entry: ```default```. This confirms the configuration is successful.
 
-Set the default mesh to use MeshServices in Exclusive mode and use mTLS in Kuma Mesh:
+Set the default mesh to use MeshServices in Exclusive mode and have mTLS enabled in Kuma Mesh:
 ```shell
 kumactl apply -f mesh-config.yml
 ```
@@ -70,7 +75,7 @@ Make sure to get rid of old token in the ```kuma-demo``` folder if there are any
 ```shell
 rm -rf kuma-demo/token-*
 ```
-
+### 3. Setup and register the postgres database in Kuma Mesh
 Generate a new token for the database data-plane:
 ```shell
 kumactl generate dataplane-token \
@@ -85,6 +90,7 @@ docker compose -f docker-compose-kuma-dp-database.yml up -d
 ```
 You can check if it is available on http://localhost:25681/gui/meshes/default/services/mesh-services and look at the ```State``` column of postgres-db
 
+### 4. Setup and register the product service in Kuma Mesh
 Generate a new token for the product service data-plane:
 ```shell
 kumactl generate dataplane-token \
