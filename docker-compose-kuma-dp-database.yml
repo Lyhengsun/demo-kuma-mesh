@@ -10,7 +10,7 @@ services:
       POSTGRES_DB: product_db
       POSTGRES_USER: product_user
       POSTGRES_PASSWORD: product
-      KUMA_CP_ADDRESS: https://172.57.78.1:5678
+      KUMA_CP_ADDRESS: https://backend1.internal:5678
       KUMA_DATAPLANE_FILE: /demo/dataplane.yaml
       KUMA_DATAPLANE_TOKEN_FILE: /demo/token-db
       DATAPLANE_VAR_NAME: postgres-db

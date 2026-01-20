@@ -5,9 +5,12 @@ labels:
   app: {{ name }}
   kuma.io/workload: {{ name }}
 networking:
+  admin:
+    port: 29901
   address: {{ address }}
   inbound:
     - port: {{ port }}
+      servicePort: {{ servicePort }}
       tags:
         kuma.io/service: {{ name }}
         kuma.io/protocol: tcp

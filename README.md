@@ -13,7 +13,7 @@ docker network create \
   kuma-demo-network
 ```
 
-## Quickstart
+## Quickstart (doesn't work for homelab-test branch)
 ### 1. Install the kumactl binary:
 ```shell
 curl -L https://kuma.io/installer.sh | VERSION="2.13.0" sh -
@@ -111,3 +111,32 @@ docker compose -f docker-compose-kuma-dp-service.yml up -d
 ```
 After it finished starting up, ```product-service``` should appear on the GUI for the Kuma Control Plane and the API should be running on http://localhost:9090/swagger-ui/index.html
 
+## Extra Configuration
+### Generate self-signed certificate for testing ( use https with internal domain name )
+```shell
+kumactl generate tls-certificate \
+  --type=server \
+  --hostname=<KUMA_CP_DNS_NAME> \
+  --cert-file=./kuma-demo/tls.crt \
+  --key-file=./kuma-demo/tls.key
+```
+
+Since ```tls.crt``` is a self-signed cert, it’s also a CA:
+```shell
+cp ./kuma-demo/tls.crt ./kuma-demo/ca.crt
+```
+
+Configure control-plane with the generated certificates:
+```shell
+KUMA_GENERAL_TLS_CERT_FILE=/tmp/tls.crt \
+  KUMA_GENERAL_TLS_KEY_FILE=/tmp/tls.key \
+  kuma-cp run
+```
+Note: ```docker-compose-kuma-cp.yml``` has been modified for this
+
+Configure the data plane proxy with CA:
+kuma-dp run \
+  --cp-address=https://<KUMA_CP_DNS_NAME>:5678 \
+  --ca-cert-file=/tmp/ca.crt \
+  --dataplane-file=dp.yaml \
+  --dataplane-token-file=/tmp/kuma-dp-redis-1-token

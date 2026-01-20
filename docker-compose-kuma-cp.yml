@@ -2,38 +2,39 @@ services:
   control-plane:
     image: kumahq/kuma-cp:2.13.0
     container_name: kuma-demo-control-plane
+    network_mode: host
     hostname: control-plane
 ### environment variables for connecting to postgres db in production
-#    environment:
-#      KUMA_STORE_TYPE: postgres
-#      KUMA_STORE_POSTGRES_HOST: cp-postgres
-#      KUMA_STORE_POSTGRES_PORT: 5432
-#      KUMA_STORE_POSTGRES_USER: kuma_user
-#      KUMA_STORE_POSTGRES_PASSWORD: kuma
-#      KUMA_STORE_POSTGRES_DB_NAME: kuma_db
-#      KUMA_ENVIRONMENT: universal
+    environment:
+      KUMA_GENERAL_TLS_CERT_FILE: /demo/tls.crt
+      KUMA_GENERAL_TLS_KEY_FILE: /demo/tls.key
+      KUMA_STORE_TYPE: postgres
+      KUMA_STORE_POSTGRES_HOST: 172.57.78.2
+      KUMA_STORE_POSTGRES_PORT: 5432
+      KUMA_STORE_POSTGRES_USER: kuma_user
+      KUMA_STORE_POSTGRES_PASSWORD: kuma
+      KUMA_STORE_POSTGRES_DB_NAME: kuma_db
+      KUMA_ENVIRONMENT: universal
     command:
       - run
     volumes:
       - ./kuma-demo:/demo
-#    depends_on:
-#      - cp-postgres
+    depends_on:
+      - cp-postgres
     ports:
       - "25681:5681"
+
+  cp-postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: kuma_db
+      POSTGRES_USER: kuma_user
+      POSTGRES_PASSWORD: kuma
+    ports:
+      - "25432:5432"
     networks:
       kuma-demo-network:
-        ipv4_address: 172.57.78.1
-
-#  cp-postgres:
-#    image: postgres:18
-#    environment:
-#      POSTGRES_DB: kuma_db
-#      POSTGRES_USER: kuma_user
-#      POSTGRES_PASSWORD: kuma
-#    ports:
-#      - "25432:5432"
-#    networks:
-#      - kuma-demo-network
+        ipv4_address: 172.57.78.2
 
 networks:
   kuma-demo-network:

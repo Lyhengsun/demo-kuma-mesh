@@ -38,3 +38,5 @@ out/
 
 kuma-demo/logs*
 kuma-demo/token*
+kuma-demo/tls.*
+kuma-demo/ca.crt
